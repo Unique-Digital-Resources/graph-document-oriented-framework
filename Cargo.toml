@@ -1,0 +1,8 @@
+[workspace]
+resolver = "2"
+members = [
+    "engine",
+    "headless_ui",
+    "web_bridge",
+    "example_app"
+]

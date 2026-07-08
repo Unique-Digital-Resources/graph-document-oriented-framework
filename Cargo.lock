@@ -54,10 +54,45 @@ dependencies = [
 ]
 
 [[package]]
+name = "console_error_panic_hook"
+version = "0.1.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a06aeb73f470f66dcdbf7223caeebb85984942f22f1adb2a088cf9668146bbbc"
+dependencies = [
+ "cfg-if",
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "core-foundation-sys"
 version = "0.8.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
+
+[[package]]
+name = "engine"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "rmp-serde",
+ "serde",
+ "serde_json",
+ "uuid",
+]
+
+[[package]]
+name = "example_app"
+version = "0.1.0"
+dependencies = [
+ "console_error_panic_hook",
+ "engine",
+ "headless_ui",
+ "serde",
+ "serde_json",
+ "uuid",
+ "wasm-bindgen",
+ "web_bridge",
+]
 
 [[package]]
 name = "find-msvc-tools"
@@ -101,15 +136,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "graph_document_framework"
+name = "headless_ui"
 version = "0.1.0"
 dependencies = [
- "chrono",
- "rmp-serde",
+ "engine",
  "serde",
  "serde_json",
  "uuid",
- "wasm-bindgen",
 ]
 
 [[package]]
@@ -368,6 +401,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dc1b4cb0cc549fcf58d7dfc081778139b3d283a081644e833e84682ad71cea24"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "web_bridge"
+version = "0.1.0"
+dependencies = [
+ "engine",
+ "headless_ui",
+ "serde",
+ "serde_json",
+ "uuid",
 ]
 
 [[package]]
