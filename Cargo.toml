@@ -4,5 +4,8 @@ members = [
     "engine",
     "headless_ui",
     "web_bridge",
-    "example_app"
+    "example_app",
+		"gdf_app",
+		"color_app",
+		"wgpu_app"
 ]

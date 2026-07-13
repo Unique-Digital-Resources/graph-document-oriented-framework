@@ -54,6 +54,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "color_app"
+version = "0.1.0"
+dependencies = [
+ "console_error_panic_hook",
+ "engine",
+ "headless_ui",
+ "serde",
+ "serde_json",
+ "uuid",
+ "wasm-bindgen",
+ "web_bridge",
+]
+
+[[package]]
 name = "console_error_panic_hook"
 version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -122,6 +136,20 @@ dependencies = [
  "futures-task",
  "pin-project-lite",
  "slab",
+]
+
+[[package]]
+name = "gdf_app"
+version = "0.1.0"
+dependencies = [
+ "console_error_panic_hook",
+ "engine",
+ "headless_ui",
+ "serde",
+ "serde_json",
+ "uuid",
+ "wasm-bindgen",
+ "web_bridge",
 ]
 
 [[package]]
@@ -404,6 +432,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "web-sys"
+version = "0.3.103"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8622dcb61c0bcc9fffa6938bed81210af2da9a7e4a1a834b2e37a59b6dfb6141"
+dependencies = [
+ "js-sys",
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "web_bridge"
 version = "0.1.0"
 dependencies = [
@@ -412,6 +450,20 @@ dependencies = [
  "serde",
  "serde_json",
  "uuid",
+]
+
+[[package]]
+name = "wgpu_app"
+version = "0.1.0"
+dependencies = [
+ "engine",
+ "headless_ui",
+ "js-sys",
+ "serde",
+ "serde_json",
+ "uuid",
+ "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]

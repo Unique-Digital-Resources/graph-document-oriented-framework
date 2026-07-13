@@ -1,0 +1,33 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #1a1a1a;
+    font-family: sans-serif;
+}
+
+#app-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#viewport-mount {
+    flex: 1;
+    position: relative;
+    /* The canvas inside will absolute position to fill this */
+}
+
+viewport-3d {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+}
+
+viewport-3d.dragging {
+    cursor: grabbing;
+}

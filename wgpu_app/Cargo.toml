@@ -1,0 +1,26 @@
+[package]
+name = "wgpu_app"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# GDF Core dependencies
+engine = { path = "../engine" }
+headless_ui = { path = "../headless_ui" }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# WebAssembly dependencies (Required for wasm-pack build)
+wasm-bindgen = "0.2"
+js-sys = "0.3"
+web-sys = { version = "0.3", features = [
+    "console"
+] }
+
+# Required for uuid to compile on wasm32-unknown-unknown
+uuid = { version = "1.23", features = ["js"] }

@@ -1,0 +1,15 @@
+{
+  "name": "example_app",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "example_app_bg.wasm",
+    "example_app.js",
+    "example_app.d.ts"
+  ],
+  "main": "example_app.js",
+  "types": "example_app.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

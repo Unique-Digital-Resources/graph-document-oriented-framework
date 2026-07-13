@@ -1,0 +1,15 @@
+{
+  "name": "color_app",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "color_app_bg.wasm",
+    "color_app.js",
+    "color_app.d.ts"
+  ],
+  "main": "color_app.js",
+  "types": "color_app.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
