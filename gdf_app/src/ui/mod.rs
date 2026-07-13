@@ -1,36 +1,46 @@
-// example_app/src/ui/mod.rs
 use engine::core::graph::Graph;
 use headless_ui::view_graph::storage::ViewGraph;
 use headless_ui::nodes::widgets::{WidgetKind, ContainerNode, ContainerLayout};
+use headless_ui::nodes::ui_node::Bounds;
 
 pub mod viewport;
 pub mod vector3_input;
 pub mod color_picker;
 
 pub fn build_ui(view: &mut ViewGraph, graph: &Graph) {
-    // Use a simple Stack root. We don't care about layout here anymore.
-    let root_widget = ContainerNode::new(ContainerLayout::Stack);
+    let mut root_widget = ContainerNode::new(ContainerLayout::Row);
+    root_widget.base.bounds = Bounds::new(0.0, 0.0, 1000.0, 600.0);
     let root_id = view.insert(WidgetKind::Container(root_widget));
     let _ = view.set_root(root_id);
 
-    // Just attach everything to the root. JS will place them in the DOM.
-    let vp_widget = viewport::Viewport3DNode::new();
+    // Viewport
+    let mut vp_widget = viewport::Viewport3DNode::new();
+    vp_widget.base.bounds = Bounds::new(0.0, 0.0, 700.0, 600.0);
     let vp_id = view.insert(WidgetKind::Custom(vp_widget));
     let _ = view.attach(root_id, vp_id);
 
+    // Inspector
+    let mut insp_widget = ContainerNode::new(ContainerLayout::Column);
+    insp_widget.base.bounds = Bounds::new(700.0, 0.0, 300.0, 600.0);
+    let insp_id = view.insert(WidgetKind::Container(insp_widget));
+    let _ = view.attach(root_id, insp_id);
+
+    // Transform Inputs
     let mesh = graph.iter_nodes().find(|n| n.type_id.as_str() == "MeshNode").unwrap();
-    
     for prop in ["position", "rotation", "scale"] {
         let input = vector3_input::Vector3InputNode::new(mesh.id, prop, graph);
         let id = view.insert(WidgetKind::Custom(input));
-        let _ = view.attach(root_id, id);
+        let _ = view.attach(insp_id, id);
     }
 
-    let color_input = color_picker::ColorPickerNode::new(mesh.id, 4, graph);
+    // Color Picker (Face 4 - The front face)
+    let face_ids = graph.get_targets(mesh.id, "CHILDREN");
+    let color_input = color_picker::ColorPickerNode::new(face_ids[4], graph); 
     let col_id = view.insert(WidgetKind::Custom(color_input));
-    let _ = view.attach(root_id, col_id);
+    let _ = view.attach(insp_id, col_id);
 }
 
+/// Syncs the Document Graph state into the View Graph before rendering.
 pub fn sync_ui(view: &mut ViewGraph, graph: &Graph) {
     let mut stack = match view.root() {
         Some(r) => vec![r],
@@ -50,12 +60,8 @@ pub fn sync_ui(view: &mut ViewGraph, graph: &Graph) {
                                     }
                                 }
                             } else if c.kind == "color-picker" {
-                                if let Some(face_idx) = c.data["face_index"].as_u64() {
-                                    if let Some(engine::core::node::properties::PropertyValue::Array(colors)) = node.properties.get_value("face_colors") {
-                                        if let Some(color) = colors.get(face_idx as usize) {
-                                            c.data["value"] = serde_json::to_value(color).unwrap_or(serde_json::Value::Null);
-                                        }
-                                    }
+                                if let Some(val) = node.properties.get_value("color") {
+                                    c.data["value"] = serde_json::to_value(val).unwrap_or(serde_json::Value::Null);
                                 }
                             }
                         }
@@ -72,14 +78,24 @@ pub fn get_scene_json(graph: &Graph) -> String {
         Some(m) => m,
         None => return "{}".to_string(),
     };
+    
+    let face_ids = graph.get_targets(mesh.id, "CHILDREN");
+    
+    let faces: Vec<serde_json::Value> = face_ids.iter().map(|fid| {
+        let face = graph.get_node(*fid).unwrap();
+        serde_json::json!({
+            "id": fid.to_string(),
+            "color": face.properties.get_value("color").unwrap()
+        })
+    }).collect();
 
     serde_json::json!({
         "mesh": {
             "id": mesh.id.to_string(),
-            "position": mesh.properties.get_value("position").unwrap(),
-            "rotation": mesh.properties.get_value("rotation").unwrap(),
-            "scale": mesh.properties.get_value("scale").unwrap(),
-            "face_colors": mesh.properties.get_value("face_colors").unwrap()
+            "position": mesh.properties.get_value("position").unwrap_or(&engine::core::node::properties::PropertyValue::Null),
+            "rotation": mesh.properties.get_value("rotation").unwrap_or(&engine::core::node::properties::PropertyValue::Null),
+            "scale": mesh.properties.get_value("scale").unwrap_or(&engine::core::node::properties::PropertyValue::Null),
+            "faces": faces
         }
     }).to_string()
 }

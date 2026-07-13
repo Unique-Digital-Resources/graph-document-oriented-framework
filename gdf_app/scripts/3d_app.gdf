@@ -1,0 +1,14 @@
+define node SceneNode {
+    active_camera: relation REFERENCE -> CameraNode
+}
+
+define node MeshNode {
+    position: string = "0.0,0.0,0.0"
+    rotation: string = "0.0,0.0,0.0"
+    scale: string = "1.0,1.0,1.0"
+    faces: relation CHILDREN -> FaceNode
+}
+
+define node FaceNode {
+    color: string = "1.0,0.0,0.0"
+}

@@ -35,12 +35,7 @@ impl DomMapper {
         let ui_node = widget.ui_node();
         
         let (tag, text, listeners, props) = match widget {
-            WidgetKind::Container(c) => {
-                let class = c.base.get_property("class")
-                    .map(|v| serde_json::to_value(v).unwrap_or(serde_json::Value::Null))
-                    .unwrap_or(serde_json::Value::Null);
-                ("div", None, vec![], serde_json::json!({"layout": format!("{:?}", c.layout), "class": class}))
-            },
+            WidgetKind::Container(_) => ("div", None, vec![], serde_json::Value::Null),
             WidgetKind::Label(l) => ("span", Some(l.text.clone()), vec![], serde_json::Value::Null),
             WidgetKind::Button(b) => ("button", Some(b.label.clone()), vec!["click".to_string()], serde_json::Value::Null),
             WidgetKind::TextField(tf) => ("input", Some(tf.value.clone()), vec!["input".to_string(), "keydown".to_string()], serde_json::Value::Null),
